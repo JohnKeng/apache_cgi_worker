@@ -1,0 +1,50 @@
+ <!DOCTYPE html>
+ <html lang="zh-TW">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>Document</title>
+ </head>
+ <body>
+<script>
+
+const render = (book) => {
+    return(`<div>
+        <h1>${book.title}</h1>
+        <button class='del-btn'> 🗑 </button>
+    </div>`)
+}
+ 
+const url = 'http://localhost:3000/books';
+
+fetch(url).then(res => res.json())
+.then( data => { 
+        console.log(data)
+        data.forEach( book => document.body.innerHTML += render(book) )
+}).then( ()=>{
+    let htmlElements = document.querySelectorAll('.del-btn')
+    htmlElements.forEach( ele => {
+        ele.addEventListener('click', (event) => {
+            event.target.parentElement.remove()
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(event),
+                mode: 'no-cors'
+  })
+  .then(response => response.json())
+
+
+
+        })
+    })
+})
+
+
+</script>
+</body>
+</html>
